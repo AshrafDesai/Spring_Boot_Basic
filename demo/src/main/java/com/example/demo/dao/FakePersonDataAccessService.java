@@ -1,18 +1,26 @@
 package com.example.demo.dao;
 
 import com.example.demo.model.Person;
+import com.example.demo.service.PersonService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 @Repository("fakeDao")
 public class FakePersonDataAccessService implements PersonDao {
 
     private static List<Person> DB = new ArrayList<>();
+
+    @Autowired
+    public PersonService(@Qualifier("postgres") PersonDao personDao) {
+        this.personDao = personDao;
+    }
 
     @Override
     public int insertPerson(UUID id, Person person) {

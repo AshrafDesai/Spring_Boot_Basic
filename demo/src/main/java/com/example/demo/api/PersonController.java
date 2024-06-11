@@ -1,15 +1,14 @@
 package com.example.demo.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.model.Person;
 import com.example.demo.service.PersonService;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -24,7 +23,7 @@ public class PersonController {
     }
 
     @PostMapping
-    public void addPerson(@RequestBody Person person) {
+    public void addPerson(@Valid @NotNull @RequestBody Person person) {
         personService.addPerson(person);
     }
 
@@ -32,10 +31,19 @@ public class PersonController {
     public List<Person> getAllPeople() {
         return personService.getAllPeople();
     }
-    
-    @GetMapping("/{id}") // Specify the path variable using {}
+
+    @GetMapping("/{id}")
     public Person getPersonById(@PathVariable("id") UUID id) {
-        return personService.getPersonById(id)
-                .orElse(null);
+        return personService.getPersonById(id).orElse(null);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletePersonById(@PathVariable("id") UUID id) {
+        personService.deletePersonById(id);
+    }
+
+    @PutMapping("/{id}")
+    public void updatePerson(@PathVariable("id") UUID id, @Valid @NotNull @RequestBody Person personToUpdate) {
+        personService.updatePerson(id, personToUpdate);
     }
 }
